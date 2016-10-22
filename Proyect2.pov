@@ -1,7 +1,9 @@
 #include "omarstree.inc"
 #include "leonards.inc"
 #include "realskies.inc"
-#include "colors.inc"
+#include "colors.inc"  
+#include "functions.inc"
+#include "math.inc"
 
 //Sky real 11 
 sky_sphere { sky_realsky_11 translate -0.05*y} 
@@ -109,6 +111,60 @@ normal { agate 1.0
          agate_turb 2.0 
          scale 0.5 }
 }
+
+
+#declare Lake_X = 100.00;
+#declare Lake_Y = 2.00;
+#declare Lake_Z = 20.00;
+#declare Border = 0.10; 
+
+#declare Water_Material =  
+material{    
+ texture{ 
+   pigment{ rgbf <0.92,0.99,0.96,0.45> }
+   finish { diffuse 0.1 reflection 0.5  
+            specular 0.8 roughness 0.0003 
+            phong 1 phong_size 400}
+ }
+ interior{ ior 1.3 caustics 0.15  
+ } 
+}
+
+#declare Pigment_01 =
+ pigment{ bumps
+          turbulence 0.20
+          scale <3,1,3>*0.12
+          translate<1,0,0>
+ }
+ 
+#declare Lake_Transformation =
+  transform{ rotate<0,0,0>
+             translate<-40,0,120>
+           }
+
+#declare Pigment_Function_01 = 
+function { 
+  pigment { Pigment_01 }
+}  
+
+
+//Lake
+isosurface {
+ function{
+   y 
+   +Pigment_Function_01(x,y,z).gray*0.2  
+ } 
+ contained_by{ 
+   box{<-Border,-Lake_Y-1.01,-Border>, 
+       < Lake_X+Border,1, Lake_Z+Border> 
+      } 
+    } 
+ accuracy 0.01
+ max_gradient 2
+ material{ Water_Material } 
+ transform  Lake_Transformation
+   
+} 
 
 
 //trees
